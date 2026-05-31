@@ -1,0 +1,81 @@
+# Mammoth Hockey Ops Dashboard
+
+## Purpose
+
+Build a hockey operations analytics dashboard focused on Utah Mammoth team performance.
+
+The application should feel like an internal decision-support tool for coaches, analysts, and hockey operations staff.
+
+Do not design the application as a fan site or news site.
+
+## Tech Stack
+
+Backend:
+
+* Python 3.13
+* FastAPI
+* Pandas
+* SQLite
+
+Frontend:
+
+* HTML5
+* Vanilla JavaScript
+* Tailwind CSS
+* Highcharts
+
+Do not introduce React or other frontend frameworks unless explicitly requested.
+
+## Architecture
+
+Backend structure:
+
+* api/
+* services/
+* analytics/
+* database/
+* models/
+
+Guidelines:
+
+* API routes should remain thin.
+* NHL API integration belongs in services.
+* Pandas calculations belong in analytics.
+* Analytics should operate on stored data rather than directly calling external APIs.
+
+## NHL API
+
+Base URL:
+
+https://api-web.nhle.com/v1
+
+Primary endpoints:
+
+* /club-schedule-season/UTA/20262027
+* /gamecenter/{gameId}/boxscore
+* /gamecenter/{gameId}/play-by-play
+
+Store raw responses whenever practical.
+
+## Frontend
+
+Use Tailwind CSS for layout and styling.
+
+Use Highcharts for all charts.
+
+Prioritize:
+
+* Team summary metrics
+* Trend visualizations
+* Opponent analysis
+* Recent game summaries
+
+Design for clarity and decision support.
+
+## Development Principles
+
+* Prefer simple solutions.
+* Avoid overengineering.
+* Favor maintainability and readability.
+* Generate complete implementations when practical.
+* Explain architectural decisions when introducing new patterns.
