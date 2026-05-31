@@ -144,21 +144,34 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Run Backend
+### Run Application
+
+From the `backend` directory with your virtual environment activated:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Backend should be available at:
+The application is available at:
 
 ```text
 http://localhost:8000
 ```
 
-### Frontend
+FastAPI serves both the API and the frontend static files in local development — no separate frontend server is required.
 
-The frontend will be served locally during development and will consume data from the FastAPI backend.
+* Dashboard: `http://localhost:8000`
+* Health check: `http://localhost:8000/api/health`
+
+The dashboard calls the health endpoint on load and displays a connection status badge when the backend is reachable.
+
+### Run Tests
+
+From the `backend` directory with your virtual environment activated:
+
+```bash
+pytest
+```
 
 ## Development Philosophy
 
