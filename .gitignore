@@ -216,3 +216,74 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# =========================
+# Testing
+# =========================
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# IDEs
+# =========================
+
+.vscode/
+.idea/
+
+# Cursor
+.cursor/
+
+# =========================
+# OS Files
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+# Environment Variables
+# =========================
+
+.env
+.env.local
+.env.*
+
+# Keep example env file
+!.env.example
+
+# =========================
+# SQLite
+# =========================
+
+*.db
+*.sqlite
+*.sqlite3
+
+# =========================
+# Logs
+# =========================
+
+*.log
+
+# =========================
+# Frontend
+# =========================
+
+node_modules/
+
+# =========================
+# Tailwind Build Artifacts
+# =========================
+
+frontend/dist/
+frontend/build/
+
+# =========================
+# Temporary Files
+# =========================
+
+tmp/
+temp/
+*.tmp
