@@ -1,6 +1,6 @@
 """NHL API integration service.
 
-Future integration with https://api-web.nhle.com/v1 for Utah Mammoth data:
+Integration with https://api-web.nhle.com/v1 for Utah Mammoth data:
 - /club-schedule-season/UTA/20262027
 - /gamecenter/{gameId}/boxscore
 - /gamecenter/{gameId}/play-by-play
@@ -8,15 +8,32 @@ Future integration with https://api-web.nhle.com/v1 for Utah Mammoth data:
 Raw API responses should be stored in SQLite whenever practical.
 """
 
+import httpx
+
 NHL_API_BASE_URL = "https://api-web.nhle.com/v1"
 
 
-class NHLService:
-    """Placeholder for NHL API data ingestion."""
+class NHLServiceError(Exception):
+    """Raised when the NHL API request fails."""
 
-    def fetch_schedule(self, season: str) -> None:
-        """Fetch team schedule for the given season. Not yet implemented."""
-        raise NotImplementedError("NHL schedule ingestion is not yet implemented.")
+
+class NHLService:
+    """NHL API data ingestion service."""
+
+    def fetch_schedule(self, season: str, team_abbr: str = "UTA") -> dict:
+        url = f"{NHL_API_BASE_URL}/club-schedule-season/{team_abbr}/{season}"
+
+        try:
+            response = httpx.get(url, timeout=30.0)
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            raise NHLServiceError(
+                f"NHL API returned {exc.response.status_code} for {url}"
+            ) from exc
+        except httpx.RequestError as exc:
+            raise NHLServiceError(f"NHL API request failed: {exc}") from exc
+
+        return response.json()
 
     def fetch_boxscore(self, game_id: str) -> None:
         """Fetch boxscore for a game. Not yet implemented."""

@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     debug: bool = False
     database_path: str = "data/mammoth_ops.db"
     frontend_dir: str = "../frontend"
+    nhl_team_abbr: str = "UTA"
+    nhl_default_season: str = "20262027"
 
     @property
     def resolved_database_path(self) -> Path:
