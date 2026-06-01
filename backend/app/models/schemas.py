@@ -28,3 +28,16 @@ class GamesListResponse(BaseModel):
     season: str
     count: int
     games: list[GameResponse]
+
+
+class TeamSummaryResponse(BaseModel):
+    season: str
+    game_type: str
+    games_played: int
+    wins: int
+    losses: int
+    ot_losses: int
+    points: int
+    goals_for: int
+    goals_against: int
+    goal_differential: int
