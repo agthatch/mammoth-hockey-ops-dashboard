@@ -75,6 +75,18 @@ export function buildTrendSeries(games, valueKey, rollingKey) {
   };
 }
 
+function formatSharedTrendTooltip() {
+  let html = `<b>${this.x}</b><br/>`;
+
+  for (const point of this.points) {
+    const decimals = point.series.tooltipOptions.valueDecimals ?? 0;
+    const value = Highcharts.numberFormat(point.y, decimals);
+    html += `<span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${value}</b><br/>`;
+  }
+
+  return html;
+}
+
 function destroyChart(containerId) {
   const existing = Highcharts.charts.find(
     (chart) => chart && chart.renderTo && chart.renderTo.id === containerId
@@ -151,6 +163,7 @@ export function createTrendLineChart({
     },
     tooltip: {
       shared: true,
+      formatter: formatSharedTrendTooltip,
       backgroundColor: '#1e293b',
       borderColor: '#334155',
       style: { color: '#e2e8f0' },
@@ -162,15 +175,20 @@ export function createTrendLineChart({
         color: COLOR_PRIMARY,
         lineWidth: 2,
         marker: { radius: 3 },
+        tooltip: {
+          valueDecimals: 0,
+        },
       },
       {
         name: rollingLabel,
         data: rolling,
-        valueDecimals: 2,
         color: COLOR_ROLLING,
         dashStyle: 'Dash',
         lineWidth: 2,
         marker: { enabled: false },
+        tooltip: {
+          valueDecimals: 2,
+        },
       },
     ],
   });

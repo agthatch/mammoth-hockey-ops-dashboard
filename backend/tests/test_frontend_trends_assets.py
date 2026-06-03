@@ -53,6 +53,8 @@ def test_charts_js_renders_highcharts_trend_charts(frontend_dir):
     assert "initPlaceholderCharts" not in charts_js
     assert "5-Game Rolling" in charts_js
     assert "valueDecimals: 2" in charts_js
+    assert "formatSharedTrendTooltip" in charts_js
+    assert "Highcharts.numberFormat" in charts_js
 
 
 def test_app_js_loads_trends_on_init(frontend_dir):
