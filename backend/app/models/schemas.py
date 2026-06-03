@@ -41,3 +41,19 @@ class TeamSummaryResponse(BaseModel):
     goals_for: int
     goals_against: int
     goal_differential: int
+
+
+class TrendGameResponse(BaseModel):
+    game_id: int
+    game_date: str
+    goals_for: int
+    goals_against: int
+    goal_differential: int
+    rolling_goals_for: float
+    rolling_goals_against: float
+    rolling_goal_differential: float
+
+
+class TrendsResponse(BaseModel):
+    game_type: str
+    games: list[TrendGameResponse]

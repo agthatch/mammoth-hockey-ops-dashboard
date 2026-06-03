@@ -89,27 +89,29 @@ def upsert_games(games_list: list[dict]) -> int:
     return len(games_list)
 
 
-def list_games(season: int | None = None) -> list[dict]:
+def list_games(season: int | None = None, game_type: int | None = None) -> list[dict]:
     select_columns = ", ".join(GAME_COLUMNS)
+    conditions: list[str] = []
+    params: list[int] = []
+
+    if season is not None:
+        conditions.append("season = ?")
+        params.append(season)
+    if game_type is not None:
+        conditions.append("game_type = ?")
+        params.append(game_type)
+
+    where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
 
     with get_connection() as connection:
-        if season is not None:
-            rows = connection.execute(
-                f"""
-                SELECT {select_columns}
-                FROM games
-                WHERE season = ?
-                ORDER BY game_date, start_time_utc
-                """,
-                (season,),
-            ).fetchall()
-        else:
-            rows = connection.execute(
-                f"""
-                SELECT {select_columns}
-                FROM games
-                ORDER BY game_date, start_time_utc
-                """
-            ).fetchall()
+        rows = connection.execute(
+            f"""
+            SELECT {select_columns}
+            FROM games
+            {where_clause}
+            ORDER BY game_date, start_time_utc
+            """,
+            params,
+        ).fetchall()
 
     return [dict(row) for row in rows]
