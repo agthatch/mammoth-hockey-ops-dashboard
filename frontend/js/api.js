@@ -29,3 +29,22 @@ export async function fetchTeamSummary(options = {}) {
 
   return fetchJson(path);
 }
+
+export async function fetchTrends(options = {}) {
+  const params = new URLSearchParams();
+
+  if (options.season) {
+    params.set('season', options.season);
+  }
+  if (options.gameType) {
+    params.set('game_type', options.gameType);
+  }
+  if (options.limit != null) {
+    params.set('limit', String(options.limit));
+  }
+
+  const query = params.toString();
+  const path = query ? `/trends?${query}` : '/trends';
+
+  return fetchJson(path);
+}

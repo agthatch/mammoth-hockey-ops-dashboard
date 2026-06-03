@@ -74,15 +74,23 @@
 
     <!-- Performance Trends -->
     <section>
-      <h2 class="text-lg font-medium text-slate-200 mb-4">Performance Trends</h2>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="panel">
-          <h3 class="panel-title">Goals Scored vs Allowed Trend</h3>
-          <div id="chart-goals-trend" class="chart-container"></div>
-        </div>
+      <h2 class="text-lg font-medium text-slate-200 mb-1">Performance Trends</h2>
+      <p id="trends-status" class="hidden text-sm text-slate-400 mb-3" role="status"></p>
+      <div class="space-y-6">
         <div class="panel">
           <h3 class="panel-title">Goal Differential Trend</h3>
-          <div id="chart-goal-diff" class="chart-container"></div>
+          <p id="chart-goal-differential-error" class="hidden chart-error mb-2" role="alert"></p>
+          <div id="chart-goal-differential-trend" class="chart-container"></div>
+        </div>
+        <div class="panel">
+          <h3 class="panel-title">Goals For Trend</h3>
+          <p id="chart-goals-for-error" class="hidden chart-error mb-2" role="alert"></p>
+          <div id="chart-goals-for-trend" class="chart-container"></div>
+        </div>
+        <div class="panel">
+          <h3 class="panel-title">Goals Against Trend</h3>
+          <p id="chart-goals-against-error" class="hidden chart-error mb-2" role="alert"></p>
+          <div id="chart-goals-against-trend" class="chart-container"></div>
         </div>
       </div>
     </section>
