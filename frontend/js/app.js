@@ -1,5 +1,6 @@
 import { checkHealth } from './api.js';
 import { initPlaceholderCharts } from './charts.js';
+import { loadTeamSummary } from './summary.js';
 
 function updateConnectionStatus(connected, detail) {
   const badge = document.getElementById('connection-status');
@@ -26,12 +27,17 @@ function updateLastUpdated() {
 async function init() {
   initPlaceholderCharts();
 
-  try {
-    const health = await checkHealth();
-    updateConnectionStatus(true, health.app ? `Connected — ${health.app}` : 'Connected');
-  } catch {
-    updateConnectionStatus(false);
-  }
+  const healthPromise = checkHealth()
+    .then((health) => {
+      updateConnectionStatus(true, health.app ? `Connected — ${health.app}` : 'Connected');
+    })
+    .catch(() => {
+      updateConnectionStatus(false);
+    });
+
+  const summaryPromise = loadTeamSummary();
+
+  await Promise.all([healthPromise, summaryPromise]);
 
   updateLastUpdated();
 }

@@ -20,6 +20,21 @@
   color: rgb(248 250 252);
 }
 
+.metric-value-loading {
+  color: rgb(148 163 184);
+  animation: metric-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes metric-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
 .panel {
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgb(51 65 85);
