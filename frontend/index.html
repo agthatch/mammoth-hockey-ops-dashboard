@@ -26,12 +26,21 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen">
 
   <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-3 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+      <div class="sm:justify-self-start">
         <h1 class="text-xl font-semibold tracking-tight text-white">Mammoth Hockey Ops Dashboard</h1>
         <p class="text-sm text-slate-400">Utah Mammoth — Operations Analytics</p>
       </div>
-      <div id="connection-status" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium bg-slate-800 text-slate-400 border border-slate-700">
+      <div class="flex items-center justify-center gap-2 sm:justify-self-center">
+        <label for="season-select" class="text-sm font-medium text-slate-300">Season</label>
+        <select
+          id="season-select"
+          class="season-select min-w-[9rem] rounded-lg border border-slate-600 bg-slate-800 px-3 py-1.5 text-sm text-slate-100 focus:border-mammoth-500 focus:outline-none focus:ring-1 focus:ring-mammoth-500"
+          aria-label="Select season"
+        >
+        </select>
+      </div>
+      <div id="connection-status" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium bg-slate-800 text-slate-400 border border-slate-700 sm:justify-self-end">
         <span id="connection-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
         <span id="connection-label">Checking connection…</span>
       </div>

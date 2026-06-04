@@ -1,4 +1,5 @@
 import { checkHealth } from './api.js';
+import { initSeasonState, getSelectedSeasonId, onSeasonChange } from './seasonState.js';
 import { loadTeamSummary } from './summary.js';
 import { loadTrends } from './trends.js';
 
@@ -24,6 +25,20 @@ function updateLastUpdated() {
   }
 }
 
+export async function reloadDashboard() {
+  const season = getSelectedSeasonId();
+  const options = season ? { season } : {};
+
+  const [summaryResult, trendsResult] = await Promise.all([
+    loadTeamSummary(options),
+    loadTrends(options),
+  ]);
+
+  if (summaryResult !== null || trendsResult !== null) {
+    updateLastUpdated();
+  }
+}
+
 async function init() {
   const healthPromise = checkHealth()
     .then((health) => {
@@ -33,12 +48,18 @@ async function init() {
       updateConnectionStatus(false);
     });
 
-  const summaryPromise = loadTeamSummary();
-  const trendsPromise = loadTrends();
+  try {
+    await initSeasonState();
+  } catch {
+    updateConnectionStatus(false, 'Backend unavailable');
+    return;
+  }
 
-  await Promise.all([healthPromise, summaryPromise, trendsPromise]);
+  onSeasonChange(() => {
+    reloadDashboard();
+  });
 
-  updateLastUpdated();
+  await Promise.all([healthPromise, reloadDashboard()]);
 }
 
 init();

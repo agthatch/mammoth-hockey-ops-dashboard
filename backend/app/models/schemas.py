@@ -54,6 +54,17 @@ class TrendGameResponse(BaseModel):
     rolling_goal_differential: float
 
 
+class SeasonOptionResponse(BaseModel):
+    id: str
+    label: str
+
+
+class SeasonListResponse(BaseModel):
+    default: str
+    seasons: list[SeasonOptionResponse]
+
+
 class TrendsResponse(BaseModel):
+    season: str
     game_type: str
     games: list[TrendGameResponse]

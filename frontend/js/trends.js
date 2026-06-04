@@ -1,4 +1,4 @@
-import { fetchTrends } from './api.js';
+import { ApiError, fetchTrends } from './api.js';
 import { clearTrendCharts, renderTrendCharts } from './charts.js';
 
 const CHART_CONTAINER_IDS = [
@@ -60,8 +60,12 @@ export async function loadTrends(options = {}) {
     renderTrendCharts(data);
     setTrendsStatus(null);
     return data;
-  } catch {
-    setTrendsError('Unable to load trend data.');
+  } catch (error) {
+    const message =
+      error instanceof ApiError && error.detail
+        ? error.detail
+        : 'Unable to load trend data.';
+    setTrendsError(message);
     return null;
   }
 }

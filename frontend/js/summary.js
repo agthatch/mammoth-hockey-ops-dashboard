@@ -1,4 +1,4 @@
-import { fetchTeamSummary } from './api.js';
+import { ApiError, fetchTeamSummary } from './api.js';
 
 const SUMMARY_VALUE_IDS = [
   'summary-games-played',
@@ -30,15 +30,25 @@ function setElementText(id, text) {
   }
 }
 
-function setSummaryStatus(message) {
+function setSummaryStatus(message, options = {}) {
   const status = document.getElementById('summary-status');
   if (!status) {
     return;
   }
 
+  const { isError = false, isInfo = false } = options;
+
   if (message) {
     status.textContent = message;
-    status.classList.remove('hidden');
+    status.classList.remove('hidden', 'text-red-400', 'text-slate-400');
+    if (isError) {
+      status.classList.add('text-red-400');
+    } else if (isInfo) {
+      status.classList.add('text-slate-400');
+    } else {
+      status.classList.add('text-red-400');
+    }
+    status.setAttribute('role', isError ? 'alert' : 'status');
   } else {
     status.textContent = '';
     status.classList.add('hidden');
@@ -62,8 +72,15 @@ export function setSummaryLoading(isLoading) {
   }
 }
 
+const EMPTY_SEASON_MESSAGE =
+  'No completed regular-season games for the selected season.';
+
 export function renderTeamSummary(data) {
-  setSummaryStatus(null);
+  if (data.games_played === 0) {
+    setSummaryStatus(EMPTY_SEASON_MESSAGE, { isInfo: true });
+  } else {
+    setSummaryStatus(null);
+  }
 
   setElementText('summary-games-played', String(data.games_played));
   setElementText(
@@ -94,7 +111,7 @@ export function renderTeamSummary(data) {
 }
 
 export function renderSummaryError(message) {
-  setSummaryStatus(message || 'Unable to load team summary');
+  setSummaryStatus(message || 'Unable to load team summary', { isError: true });
   setSummaryLoading(false);
 
   for (const id of SUMMARY_VALUE_IDS) {
@@ -114,8 +131,12 @@ export async function loadTeamSummary(options = {}) {
     const data = await fetchTeamSummary(options);
     renderTeamSummary(data);
     return data;
-  } catch {
-    renderSummaryError('Unable to load team summary');
+  } catch (error) {
+    const message =
+      error instanceof ApiError && error.detail
+        ? error.detail
+        : 'Unable to load team summary';
+    renderSummaryError(message);
     return null;
   }
 }

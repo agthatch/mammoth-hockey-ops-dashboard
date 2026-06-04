@@ -90,6 +90,7 @@ def test_get_trends_returns_valid_payload(client):
 
     assert response.status_code == 200
     payload = response.json()
+    assert payload["season"] == "20252026"
     assert payload["game_type"] == "R"
     assert len(payload["games"]) == 4
     first_game = payload["games"][0]
