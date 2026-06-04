@@ -1,11 +1,21 @@
 from app.database.connection import get_connection
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 
 def _get_current_version(connection) -> int:
     row = connection.execute("SELECT MAX(version) FROM schema_version").fetchone()
     return int(row[0]) if row[0] is not None else 0
+
+
+def _record_version(connection, version: int) -> None:
+    connection.execute(
+        """
+        INSERT OR REPLACE INTO schema_version (version)
+        VALUES (?)
+        """,
+        (version,),
+    )
 
 
 def _migrate_to_v2(connection) -> None:
@@ -42,6 +52,20 @@ def _migrate_to_v2(connection) -> None:
     )
 
 
+def _migrate_to_v3(connection) -> None:
+    connection.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS season_sync_metadata (
+            team_abbr TEXT NOT NULL,
+            season TEXT NOT NULL,
+            last_sync_at TEXT NOT NULL,
+            game_count INTEGER NOT NULL DEFAULT 0,
+            PRIMARY KEY (team_abbr, season)
+        );
+        """
+    )
+
+
 def init_db() -> None:
     with get_connection() as connection:
         connection.executescript(
@@ -54,14 +78,12 @@ def init_db() -> None:
         )
 
         current_version = _get_current_version(connection)
-        if current_version < SCHEMA_VERSION:
+        if current_version < 2:
             _migrate_to_v2(connection)
-            connection.execute(
-                """
-                INSERT OR REPLACE INTO schema_version (version)
-                VALUES (?)
-                """,
-                (SCHEMA_VERSION,),
-            )
+            _record_version(connection, 2)
+            current_version = 2
+        if current_version < 3:
+            _migrate_to_v3(connection)
+            _record_version(connection, 3)
 
         connection.commit()

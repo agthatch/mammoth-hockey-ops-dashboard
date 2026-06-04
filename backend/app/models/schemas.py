@@ -64,6 +64,13 @@ class SeasonListResponse(BaseModel):
     seasons: list[SeasonOptionResponse]
 
 
+class SeasonStatusResponse(BaseModel):
+    season: str
+    team_abbr: str
+    last_sync_at: str | None
+    game_count: int
+
+
 class TrendsResponse(BaseModel):
     season: str
     game_type: str
