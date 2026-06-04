@@ -22,6 +22,16 @@ def test_index_html_includes_season_selector(frontend_dir):
     assert ">Season</label>" in html or ">Season<" in html
 
 
+def test_index_html_includes_season_sync_ui(frontend_dir):
+    html = (frontend_dir / "index.html").read_text(encoding="utf-8")
+
+    assert 'id="season-sync-value"' in html
+    assert 'id="refresh-nhl-data"' in html
+    assert "Last NHL Sync" in html
+    assert 'id="connection-status"' not in html
+    assert 'id="connection-dot"' not in html
+
+
 def test_index_html_includes_trend_chart_containers(frontend_dir):
     html = (frontend_dir / "index.html").read_text(encoding="utf-8")
 
@@ -44,6 +54,33 @@ def test_api_js_exposes_fetch_trends(frontend_dir):
     assert "/trends" in api_js
     assert "/seasons" in api_js
     assert "export class ApiError" in api_js
+
+
+def test_api_js_exposes_season_sync_and_ingest(frontend_dir):
+    api_js = (frontend_dir / "js" / "api.js").read_text(encoding="utf-8")
+
+    assert "export async function fetchSeasonStatus" in api_js
+    assert "export async function postIngestSchedule" in api_js
+    assert "/season-status" in api_js
+    assert "/ingest/schedule" in api_js
+    assert "export async function postJson" in api_js
+
+
+def test_format_js_exports_timestamp_formatter(frontend_dir):
+    format_js = (frontend_dir / "js" / "format.js").read_text(encoding="utf-8")
+
+    assert "export function formatSyncTimestamp" in format_js
+    assert "Intl.DateTimeFormat" in format_js
+    assert "new Date" in format_js
+
+
+def test_season_sync_js_exports_load_and_refresh(frontend_dir):
+    season_sync_js = (frontend_dir / "js" / "seasonSync.js").read_text(encoding="utf-8")
+
+    assert "export async function loadSeasonSyncStatus" in season_sync_js
+    assert "export async function refreshNhlData" in season_sync_js
+    assert "Never Synced" in season_sync_js
+    assert "Refreshing..." in season_sync_js
 
 
 def test_season_state_js_exports_season_management(frontend_dir):
@@ -76,14 +113,17 @@ def test_charts_js_renders_highcharts_trend_charts(frontend_dir):
     assert "Highcharts.numberFormat" in charts_js
 
 
-def test_app_js_loads_trends_on_init(frontend_dir):
+def test_app_js_wires_season_sync_workflow(frontend_dir):
     app_js = (frontend_dir / "js" / "app.js").read_text(encoding="utf-8")
 
     assert "loadTrends" in app_js
-    assert "reloadDashboard" in app_js
+    assert "refreshDashboard" in app_js
+    assert "loadSeasonSyncStatus" in app_js
     assert "initSeasonState" in app_js
     assert "onSeasonChange" in app_js
     assert "getSelectedSeasonId" in app_js
+    assert "initRefreshButton" in app_js
+    assert "checkHealth" not in app_js
     assert "initPlaceholderCharts" not in app_js
     assert "20252026" not in app_js
     assert "20262027" not in app_js

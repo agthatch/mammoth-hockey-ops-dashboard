@@ -161,9 +161,9 @@ http://localhost:8000
 FastAPI serves both the API and the frontend static files in local development — no separate frontend server is required.
 
 * Dashboard: `http://localhost:8000`
-* Health check: `http://localhost:8000/api/health`
+* Health check: `http://localhost:8000/api/health` (ops / monitoring; not shown in the UI)
 
-The dashboard calls the health endpoint on load and displays a connection status badge when the backend is reachable.
+The dashboard header shows **Last NHL Sync** for the selected season and a **Refresh NHL Data** button to manually ingest the NHL schedule and reload summary metrics and trend charts.
 
 ### Run Tests
 

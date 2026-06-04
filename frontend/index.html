@@ -40,9 +40,19 @@
         >
         </select>
       </div>
-      <div id="connection-status" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium bg-slate-800 text-slate-400 border border-slate-700 sm:justify-self-end">
-        <span id="connection-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
-        <span id="connection-label">Checking connection…</span>
+      <div id="season-sync-panel" class="flex flex-col items-end gap-2 sm:justify-self-end">
+        <div class="text-right">
+          <p class="text-xs font-medium uppercase tracking-wide text-slate-400">Last NHL Sync</p>
+          <p id="season-sync-value" class="text-sm font-medium text-slate-200" aria-live="polite">—</p>
+        </div>
+        <p id="season-sync-message" class="hidden text-sm" role="alert"></p>
+        <button
+          id="refresh-nhl-data"
+          type="button"
+          class="refresh-btn rounded-lg border border-mammoth-600 bg-mammoth-600/20 px-3 py-1.5 text-sm font-medium text-mammoth-400 hover:bg-mammoth-600/30 focus:border-mammoth-500 focus:outline-none focus:ring-1 focus:ring-mammoth-500"
+        >
+          Refresh NHL Data
+        </button>
       </div>
     </div>
   </header>

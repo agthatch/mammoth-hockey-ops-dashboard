@@ -1,22 +1,11 @@
-import { checkHealth } from './api.js';
 import { initSeasonState, getSelectedSeasonId, onSeasonChange } from './seasonState.js';
+import {
+  initRefreshButton,
+  loadSeasonSyncStatus,
+  renderSyncInitError,
+} from './seasonSync.js';
 import { loadTeamSummary } from './summary.js';
 import { loadTrends } from './trends.js';
-
-function updateConnectionStatus(connected, detail) {
-  const badge = document.getElementById('connection-status');
-  const label = document.getElementById('connection-label');
-
-  badge.classList.remove('status-connected', 'status-error');
-
-  if (connected) {
-    badge.classList.add('status-connected');
-    label.textContent = detail || 'Connected';
-  } else {
-    badge.classList.add('status-error');
-    label.textContent = detail || 'Backend unavailable';
-  }
-}
 
 function updateLastUpdated() {
   const el = document.getElementById('last-updated');
@@ -25,41 +14,36 @@ function updateLastUpdated() {
   }
 }
 
-export async function reloadDashboard() {
+export async function refreshDashboard() {
   const season = getSelectedSeasonId();
   const options = season ? { season } : {};
 
-  const [summaryResult, trendsResult] = await Promise.all([
+  const [statusResult, summaryResult, trendsResult] = await Promise.all([
+    loadSeasonSyncStatus(options),
     loadTeamSummary(options),
     loadTrends(options),
   ]);
 
-  if (summaryResult !== null || trendsResult !== null) {
+  if (statusResult !== null || summaryResult !== null || trendsResult !== null) {
     updateLastUpdated();
   }
 }
 
 async function init() {
-  const healthPromise = checkHealth()
-    .then((health) => {
-      updateConnectionStatus(true, health.app ? `Connected — ${health.app}` : 'Connected');
-    })
-    .catch(() => {
-      updateConnectionStatus(false);
-    });
-
   try {
     await initSeasonState();
   } catch {
-    updateConnectionStatus(false, 'Backend unavailable');
+    renderSyncInitError();
     return;
   }
 
   onSeasonChange(() => {
-    reloadDashboard();
+    refreshDashboard();
   });
 
-  await Promise.all([healthPromise, reloadDashboard()]);
+  initRefreshButton(refreshDashboard);
+
+  await refreshDashboard();
 }
 
 init();

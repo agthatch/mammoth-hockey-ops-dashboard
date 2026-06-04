@@ -19,8 +19,8 @@ function formatErrorDetail(detail) {
   return null;
 }
 
-export async function fetchJson(path) {
-  const response = await fetch(`${API_BASE}${path}`);
+async function requestJson(path, options = {}) {
+  const response = await fetch(`${API_BASE}${path}`, options);
 
   if (!response.ok) {
     let detail = null;
@@ -40,8 +40,12 @@ export async function fetchJson(path) {
   return response.json();
 }
 
-export async function checkHealth() {
-  return fetchJson('/health');
+export async function fetchJson(path) {
+  return requestJson(path);
+}
+
+export async function postJson(path) {
+  return requestJson(path, { method: 'POST' });
 }
 
 export async function fetchSeasons() {
@@ -81,4 +85,30 @@ export async function fetchTrends(options = {}) {
   const path = query ? `/trends?${query}` : '/trends';
 
   return fetchJson(path);
+}
+
+export async function fetchSeasonStatus(options = {}) {
+  const params = new URLSearchParams();
+
+  if (options.season) {
+    params.set('season', options.season);
+  }
+
+  const query = params.toString();
+  const path = query ? `/season-status?${query}` : '/season-status';
+
+  return fetchJson(path);
+}
+
+export async function postIngestSchedule(options = {}) {
+  const params = new URLSearchParams();
+
+  if (options.season) {
+    params.set('season', options.season);
+  }
+
+  const query = params.toString();
+  const path = query ? `/ingest/schedule?${query}` : '/ingest/schedule';
+
+  return postJson(path);
 }
