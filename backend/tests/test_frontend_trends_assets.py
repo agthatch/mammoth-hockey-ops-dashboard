@@ -14,6 +14,14 @@ def frontend_dir():
     return FRONTEND_DIR
 
 
+def test_index_html_includes_ga4_once(frontend_dir):
+    html = (frontend_dir / "index.html").read_text(encoding="utf-8")
+
+    assert html.count("G-WBX4XR634B") == 2
+    assert html.count("googletagmanager.com/gtag/js") == 1
+    assert html.count("gtag('config'") == 1
+
+
 def test_index_html_includes_season_selector(frontend_dir):
     html = (frontend_dir / "index.html").read_text(encoding="utf-8")
 
