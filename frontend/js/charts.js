@@ -148,6 +148,10 @@ export function createTrendLineChart({
       ...CHART_THEME.chart,
       type: 'line',
     },
+    accessibility: {
+      description:
+        `${title}. Line chart of ${valueLabel} by game date, with ${rollingLabel} as a dashed comparison series.`,
+    },
     title: { ...CHART_THEME.title, text: title },
     subtitle: isEmpty
       ? { ...CHART_THEME.subtitle, text: 'No games in selected period' }

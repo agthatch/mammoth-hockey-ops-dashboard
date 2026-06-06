@@ -116,6 +116,20 @@ def test_trends_js_exports_load_trends(frontend_dir):
     assert "Unable to load trend data." in trends_js
 
 
+def test_index_html_includes_highcharts_accessibility_module(frontend_dir):
+    html = (frontend_dir / "index.html").read_text(encoding="utf-8")
+
+    assert "modules/accessibility.js" in html
+    assert html.index("highcharts.js") < html.index("modules/accessibility.js")
+
+
+def test_charts_js_includes_accessibility_description(frontend_dir):
+    charts_js = (frontend_dir / "js" / "charts.js").read_text(encoding="utf-8")
+
+    assert "accessibility:" in charts_js
+    assert "description:" in charts_js
+
+
 def test_charts_js_renders_highcharts_trend_charts(frontend_dir):
     charts_js = (frontend_dir / "js" / "charts.js").read_text(encoding="utf-8")
 
