@@ -277,6 +277,7 @@ node_modules/
 # Tailwind Build Artifacts
 # =========================
 
+frontend/css/tailwind.css
 frontend/dist/
 frontend/build/
 

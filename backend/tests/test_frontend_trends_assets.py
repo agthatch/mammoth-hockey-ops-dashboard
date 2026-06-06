@@ -14,6 +14,14 @@ def frontend_dir():
     return FRONTEND_DIR
 
 
+def test_index_html_uses_compiled_tailwind_css(frontend_dir):
+    html = (frontend_dir / "index.html").read_text(encoding="utf-8")
+
+    assert "cdn.tailwindcss.com" not in html
+    assert 'href="css/tailwind.css"' in html
+    assert "tailwind.config" not in html
+
+
 def test_index_html_includes_ga4_once(frontend_dir):
     html = (frontend_dir / "index.html").read_text(encoding="utf-8")
 

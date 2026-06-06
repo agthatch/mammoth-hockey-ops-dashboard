@@ -144,6 +144,18 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### Frontend CSS Build
+
+Tailwind CSS is compiled from source — the Play CDN is not used. Build the stylesheet before running the app locally (or use watch mode during frontend work):
+
+```bash
+cd frontend
+
+npm install
+npm run build      # one-time compile
+# npm run watch    # optional: rebuild on class changes during dev
+```
+
 ### Run Application
 
 From the `backend` directory with your virtual environment activated:
@@ -172,6 +184,18 @@ From the `backend` directory with your virtual environment activated:
 ```bash
 pytest
 ```
+
+### Render Deployment
+
+Configure your Render web service (dashboard settings) with:
+
+| Setting | Value |
+|---------|-------|
+| Root Directory | `backend` |
+| Build Command | `pip install -r requirements.txt && cd ../frontend && npm ci && npm run build` |
+| Start Command | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+
+Render provisions Node.js when `npm` runs in the build command. The build writes `frontend/css/tailwind.css`, which FastAPI serves at `/css/tailwind.css` via the default `FRONTEND_DIR=../frontend` setting.
 
 ## Development Philosophy
 
